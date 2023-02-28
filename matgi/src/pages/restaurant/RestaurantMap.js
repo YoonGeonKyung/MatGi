@@ -1,5 +1,13 @@
 import { useEffect } from 'react';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import styled from 'styled-components';
 
+const Wrapper = styled.div`
+	position: relative;
+	min-height: 100%;
+	padding-bottom: 65px;
+`;
 const { kakao } = window;
 
 const RestaurantMap = () => {
@@ -14,10 +22,12 @@ const RestaurantMap = () => {
 	}, []);
 
 	return (
-		<div>
+		<Wrapper>
+			<Header />
 			<h1>맛집 지도</h1>
 			<div id="map" style={{ width: '500px', height: '500px' }}></div>
-		</div>
+			<Footer />
+		</Wrapper>
 	);
 };
 
