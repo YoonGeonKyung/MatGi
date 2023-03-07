@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 const FooterContainer = styled.footer`
 	height: 65px;
-	position: absolute;
 	bottom: 0;
 
 	display: flex;
