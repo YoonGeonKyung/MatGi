@@ -1,19 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import { inputState } from '../store/atom';
 
 const { kakao } = window;
 
-const RestaurantMap = () => {
-	const [keyword, setKeyword] = useState('강남역');
-	const [inputText, setInputText] = useState('');
-
-	const onSubmitHandler = () => {
-		setKeyword(inputText);
-		setInputText('');
-	};
-
-	const onChangeHandler = e => {
-		setInputText(e.target.value);
-	};
+const MapContainer = () => {
+	const keyword = useRecoilValue(inputState);
 
 	useEffect(() => {
 		const mapContainer = document.getElementById('myMap');
@@ -67,21 +59,9 @@ const RestaurantMap = () => {
 	return (
 		<div>
 			<h2>검색 지도</h2>
-			<div>
-				<input
-					type="text"
-					value={inputText}
-					placeholder="검색어를 입력하세요."
-					onChange={onChangeHandler}
-					size="20"
-				/>
-				<button type="submit" onClick={onSubmitHandler}>
-					검색
-				</button>
-			</div>
 			<div id="myMap" style={{ width: '100%', height: '500px' }}></div>
 		</div>
 	);
 };
 
-export default RestaurantMap;
+export default MapContainer;
