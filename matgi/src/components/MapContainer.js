@@ -13,6 +13,7 @@ const MapContainer = props => {
 		const mapContainer = document.getElementById('myMap');
 		const mapOptions = {
 			center: new kakao.maps.LatLng(37.566826, 126.9786567),
+			draggable: false,
 			level: 3,
 		};
 		const map = new kakao.maps.Map(mapContainer, mapOptions);
