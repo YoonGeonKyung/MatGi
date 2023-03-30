@@ -1,17 +1,19 @@
 import { inputState } from '../store/atom';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
+import { useState } from 'react';
 
 const InputForm = () => {
-	const [inputText, setInputText] = useRecoilState(inputState);
-
+	const [searchText, setSearchText] = useState();
+	const setInputState = useSetRecoilState(inputState);
 	const navigate = useNavigate();
 
 	const onChangeHandler = e => {
-		setInputText(e.target.value);
+		setSearchText(e.target.value);
 	};
 
 	const onSubmitHandler = () => {
+		setInputState(pre => searchText);
 		navigate('/map');
 	};
 
@@ -19,7 +21,7 @@ const InputForm = () => {
 		<div>
 			<input
 				type="text"
-				value={inputText}
+				value={searchText}
 				placeholder="검색어를 입력하세요."
 				onChange={onChangeHandler}
 				size="20"
