@@ -2,9 +2,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import DummyData from './components/DummyData';
-import InputForm from './components/InputForm';
 import { RecoilRoot } from 'recoil';
+import Home from './pages/Home';
+import Map from './pages/Map';
+import RestaurantDetail from './pages/RestaurantDetail';
 
 function App() {
 	return (
@@ -13,8 +14,9 @@ function App() {
 				<Header />
 				<BrowserRouter>
 					<Routes>
-						<Route path="/" element={<InputForm />} />
-						<Route path="/map" element={<DummyData />} />
+						<Route path="/" element={<Home />} />
+						<Route path="/map" element={<Map />} />
+						<Route path="/restaurant/:id" element={<RestaurantDetail />} />
 					</Routes>
 				</BrowserRouter>
 				<Footer />
