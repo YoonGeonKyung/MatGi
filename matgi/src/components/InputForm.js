@@ -11,7 +11,7 @@ const InputForm = () => {
 	};
 
 	const onSubmitHandler = () => {
-		navigate('/map');
+		navigate('/search/' + input);
 	};
 
 	return (
