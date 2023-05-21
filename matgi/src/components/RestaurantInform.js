@@ -1,15 +1,12 @@
 import { NavLink } from 'react-router-dom';
-import { Restaurants } from '../store/Restaurant';
 
-const RestaurantInform = () => {
+const RestaurantInform = props => {
 	return (
 		<div>
-			{Restaurants.map(restaurant => (
-				<li key={restaurant.id}>
-					<h2>{restaurant.title}</h2>
-					<NavLink to={'/restaurant/' + restaurant.id}>
-						<img src={restaurant.image} />
-					</NavLink>
+			{props.Restaurants.map((restaurant, index) => (
+				<li key={index}>
+					<h2>{restaurant.RESTRT_NM}</h2>
+					<NavLink to={'/restaurant/' + restaurant.RESTRT_NM}>Go Detail Page</NavLink>
 				</li>
 			))}
 		</div>

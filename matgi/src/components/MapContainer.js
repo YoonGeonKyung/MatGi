@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { inputState } from '../store/atom';
-import { Restaurants } from '../store/Restaurant';
+import { inputState, mapLatLng } from '../store/atom';
 
 const { kakao } = window;
 const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
 
-const MapContainer = () => {
+const MapContainer = props => {
 	const keyword = useRecoilValue(inputState);
+	const location = useRecoilValue(mapLatLng);
 
 	useEffect(() => {
 		const mapContainer = document.getElementById('myMap');
 		const mapOptions = {
-			center: new kakao.maps.LatLng(33.450701, 126.570667),
+			center: new kakao.maps.LatLng(location.x, location.y),
 			draggable: false,
 			level: 3,
 		};
@@ -20,7 +20,7 @@ const MapContainer = () => {
 
 		const geocoder = new kakao.maps.services.Geocoder();
 
-		for (var i = 0; i < Restaurants.length; i++) {
+		for (var i = 0; i < props.Restaurants.length; i++) {
 			// 마커 이미지의 이미지 크기 입니다
 			const imageSize = new kakao.maps.Size(24, 35);
 
@@ -30,8 +30,11 @@ const MapContainer = () => {
 			// 결과값으로 받은 위치를 마커로 표시합니다
 			const marker = new kakao.maps.Marker({
 				map: map,
-				position: Restaurants[i].latlng,
-				title: Restaurants.title,
+				position: new kakao.maps.LatLng(
+					props.Restaurants[i].REFINE_WGS84_LAT,
+					props.Restaurants[i].REFINE_WGS84_LOGT,
+				),
+				title: props.Restaurants[i].RESTRT_NM,
 				image: markerImage,
 			});
 		}
@@ -41,14 +44,15 @@ const MapContainer = () => {
 			// 정상적으로 검색이 완료됐으면
 			if (status === kakao.maps.services.Status.OK) {
 				const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-				console.log(status);
-				console.log(result[0]);
+				console.log(result);
 
 				// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
 				map.setCenter(coords);
 			}
 		});
 	}, [keyword]);
+
+	console.log(location);
 
 	return (
 		<div>
