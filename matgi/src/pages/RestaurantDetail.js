@@ -1,23 +1,27 @@
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { Restaurants } from '../store/Restaurant';
 import { mapLatLng } from '../store/atom';
 import { useRecoilValue } from 'recoil';
 
 const RestaurantDetail = () => {
 	const { RESTRT_NM } = useParams();
-	const navigate = useNavigate();
 	const location = useRecoilValue(mapLatLng);
+	const user = localStorage.getItem('user');
 
 	const filteredRestaurant = Restaurants.filter(
 		restaurant =>
-			restaurant.RESTRT_NM == RESTRT_NM &&
+			restaurant.RESTRT_NM === RESTRT_NM &&
 			(restaurant.REFINE_WGS84_LAT - location.y) ** 2 +
 				(restaurant.REFINE_WGS84_LOGT - location.x) ** 2 <=
 				0.0001,
 	);
 
-	console.log(RESTRT_NM);
-	console.log(filteredRestaurant);
+	const addClickHandler = () => {
+		const existingArray = localStorage.getItem('myWish');
+		const newArray = existingArray ? JSON.parse(existingArray) : [];
+		newArray.push(filteredRestaurant[0]);
+		localStorage.setItem('myWish', JSON.stringify(newArray));
+	};
 
 	return (
 		<div>
@@ -28,7 +32,7 @@ const RestaurantDetail = () => {
 			<h2>우편 번호 : {filteredRestaurant[0].REFINE_ZIPNO}</h2>
 			<h2>도로명 주소 : {filteredRestaurant[0].REFINE_ROADNM_ADDR}</h2>
 			<h2>지번 주소 : {filteredRestaurant[0].REFINE_LOTNO_ADDR}</h2>
-			<button onClick={() => navigate(-1)}>Back</button>
+			{user && <button onClick={addClickHandler}>찜 등록</button>}
 		</div>
 	);
 };

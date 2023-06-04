@@ -1,16 +1,10 @@
 import { useState, useEffect } from 'react';
-import { inputState, mapLatLng } from '../store/atom';
+import { inputState } from '../store/atom';
 import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
-
-const inputLocation = {
-	x: 0,
-	y: 0,
-};
+import { useRecoilState } from 'recoil';
 
 const InputForm = () => {
-	const setInput = useSetRecoilState(inputState);
-	const setLocation = useSetRecoilState(mapLatLng);
+	const [input, setInput] = useRecoilState(inputState);
 	const [textInput, setTextInput] = useState('');
 	const navigate = useNavigate();
 
@@ -36,8 +30,7 @@ const InputForm = () => {
 					const data = await response.json();
 					if (data.documents.length > 0) {
 						const { x, y } = data.documents[0].address;
-						inputLocation.x = x;
-						inputLocation.y = y;
+						localStorage.setItem('location', JSON.stringify({ x, y }));
 					}
 				} else {
 					console.error('Error:', response.status);
@@ -50,14 +43,18 @@ const InputForm = () => {
 		if (textInput) {
 			getGeoCoding();
 		}
+
+		const storedRecoilState = localStorage.getItem('input');
+
+		if (storedRecoilState) {
+			const parsedRecoilState = JSON.parse(storedRecoilState);
+			setInput(parsedRecoilState);
+		}
 	}, [textInput]);
 
 	const onSubmitHandler = () => {
 		setInput(textInput);
-		setLocation({
-			x: inputLocation.x,
-			y: inputLocation.y,
-		});
+		localStorage.setItem('input', JSON.stringify(textInput));
 		navigate('/search/' + textInput);
 	};
 
@@ -66,7 +63,7 @@ const InputForm = () => {
 			<input
 				type="text"
 				value={textInput}
-				placeholder="검색어를 입력하세요."
+				placeholder={input}
 				onChange={onChangeHandler}
 				size="20"
 			/>

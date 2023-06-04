@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const NavgationContainer = styled.div`
@@ -34,20 +35,48 @@ const NavgationLink = styled.a`
 	}
 `;
 
+const NavgationOption = styled.option`
+	color: gray;
+	&:hover {
+		color: black;
+	}
+`;
+
 const Header = () => {
-	return (
-		<NavgationContainer>
-			<NavgationTitle href="/">MATGI</NavgationTitle>
-			<Navgation>
-				<NavgationItem>
-					<NavgationLink href="/">찜</NavgationLink>
-				</NavgationItem>
-				<NavgationItem>
-					<NavgationLink href="/">로그인</NavgationLink>
-				</NavgationItem>
-			</Navgation>
-		</NavgationContainer>
-	);
+	const user = localStorage.getItem('user');
+	const navigate = useNavigate();
+
+	const logoutClickHandler = e => {
+		e.preventDefault();
+		localStorage.clear();
+		navigate('/');
+	};
+	if (user) {
+		return (
+			<NavgationContainer>
+				<NavgationTitle href="/">MATGI</NavgationTitle>
+				<Navgation>
+					<NavgationItem>
+						<NavgationLink href="/my">찜</NavgationLink>
+					</NavgationItem>
+					<NavgationItem>
+						<NavgationOption onClick={logoutClickHandler}>로그아웃</NavgationOption>
+					</NavgationItem>
+				</Navgation>
+			</NavgationContainer>
+		);
+	} else {
+		return (
+			<NavgationContainer>
+				<NavgationTitle href="/">MATGI</NavgationTitle>
+				<Navgation>
+					<NavgationItem>
+						<NavgationLink href="/login">로그인</NavgationLink>
+					</NavgationItem>
+				</Navgation>
+			</NavgationContainer>
+		);
+	}
 };
 
 export default Header;
