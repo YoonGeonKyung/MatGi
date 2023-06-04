@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { inputState, mapLatLng } from '../store/atom';
 
 const { kakao } = window;
@@ -7,9 +7,15 @@ const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marke
 
 const MapContainer = props => {
 	const keyword = useRecoilValue(inputState);
-	const location = useRecoilValue(mapLatLng);
+	const [location, setLocation] = useRecoilState(mapLatLng);
 
 	useEffect(() => {
+		const storedRecoilState = localStorage.getItem('location');
+
+		if (storedRecoilState) {
+			const parsedRecoilState = JSON.parse(storedRecoilState);
+			setLocation(parsedRecoilState);
+		}
 		const mapContainer = document.getElementById('myMap');
 		const mapOptions = {
 			center: new kakao.maps.LatLng(location.x, location.y),
@@ -44,15 +50,12 @@ const MapContainer = props => {
 			// 정상적으로 검색이 완료됐으면
 			if (status === kakao.maps.services.Status.OK) {
 				const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-				console.log(result);
 
 				// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
 				map.setCenter(coords);
 			}
 		});
 	}, [keyword]);
-
-	console.log(location);
 
 	return (
 		<div>
